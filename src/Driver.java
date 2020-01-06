@@ -8,6 +8,7 @@ import java.util.Random;
 public class Driver {
 
 	/**
+	 * Generate random Rotor function
 	 * 
 	 * @param alphRight   : the random characters
 	 * @param notchLetter : the letter where the notch is present
@@ -35,9 +36,10 @@ public class Driver {
 	}
 
 	/**
+	 * Encryption/Decryption Function
 	 * 
-	 * @param key        : the key size is the number of rotors
-	 * @param rotorList: array of Rotors
+	 * @param key       : the key size is the number of rotors
+	 * @param rotorList : array of Rotors
 	 * @return the encrypted string
 	 */
 	public String encrypt(char[] key, Rotor[] rotorList) {
@@ -47,9 +49,15 @@ public class Driver {
 		 * when Rotor[0] does a full spin
 		 * 
 		 */
+		
+		
 		return null;
 	}
 
+	/**
+	 * Visualize Rotors Function
+	 * @param rotorList : the array of Rotors
+	 */
 	public static void visualizeRotors(Rotor[] rotorList) {
 		// Reflector
 		System.out.print("Refl" + "\t");
@@ -95,10 +103,20 @@ public class Driver {
 		Rotor R0 = generateRotor('a');
 		Rotor R1 = generateRotor('e');
 		Rotor R2 = generateRotor('g');
-		Rotor[] rotorList = { R0, R1, R2 };
-//		System.out.println(R1.toString());
 
+		// Testing Rotation
+		String str = "bijthaenlyumxpdkzvgsrwfqco";
+		char[] charAr = str.toCharArray();
+		Rotor R3 = new Rotor(charAr, 'h');
+
+		Rotor[] rotorList = { R0, R1, R2, R3 };
 		visualizeRotors(rotorList);
+
+		System.out.println();
+
+		R3.rotateRotorByOne();
+		visualizeRotors(rotorList);
+
 	}
 
 }

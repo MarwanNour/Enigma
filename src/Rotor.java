@@ -52,8 +52,21 @@ public class Rotor {
 	 * keystroke
 	 * 
 	 */
-	public void rotateRotor() {
+	public void rotateRotorByOne() {
+		// Rotate Left Array
+		char tempLeft = this.alphLeft[0];
+		int i;
+		for(i = 0; i < 25; i++) {
+			this.alphLeft[i] = this.alphLeft[i+1];
+		}
+		alphLeft[i] = tempLeft;
 		
+		// Rotate Right Array
+		char tempRight = this.alphRight[0];
+		for(i = 0 ; i< 25; i++) {
+			this.alphRight[i] = this.alphRight[i+1];
+		}
+		alphRight[i] = tempRight;
 		
 	}
 
