@@ -1,5 +1,6 @@
 import java.util.Random;
 
+
 /**
  * 
  * @author Marwan Nour
@@ -49,13 +50,13 @@ public class Driver {
 		 * when Rotor[0] does a full spin
 		 * 
 		 */
-		
-		
+
 		return null;
 	}
 
 	/**
 	 * Visualize Rotors Function
+	 * 
 	 * @param rotorList : the array of Rotors
 	 */
 	public static void visualizeRotors(Rotor[] rotorList) {
@@ -92,14 +93,37 @@ public class Driver {
 
 			System.out.println();
 		}
+		
+		System.out.println();
+	}
+
+	/**
+	 * Create Full Key Function : Create a full key for the rotor list by creating
+	 * partial keys for each rotor
+	 * 
+	 * @param key
+	 * @param rotorList
+	 * @throws Exception 
+	 */
+	public static void createFullKey(String key, Rotor[] rotorList) throws Exception {
+		System.out.println("key length " + key.length());
+		System.out.println("Rotor list length " + rotorList.length);
+		if(key.length() != rotorList.length) {
+			throw new Exception("Key must of the same size of the number of rotors");
+		}
+		char[] keyAr = key.toCharArray();
+		for (int i = 0; i < rotorList.length; i++) {
+			rotorList[i].createPartialKey(keyAr[i]);
+		}
 	}
 
 	/**
 	 * Main method
 	 * 
 	 * @param args
+	 * @throws Exception 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		Rotor R0 = generateRotor('a');
 		Rotor R1 = generateRotor('e');
 		Rotor R2 = generateRotor('g');
@@ -108,15 +132,17 @@ public class Driver {
 		String str = "bijthaenlyumxpdkzvgsrwfqco";
 		char[] charAr = str.toCharArray();
 		Rotor R3 = new Rotor(charAr, 'h');
-
 		Rotor[] rotorList = { R0, R1, R2, R3 };
 		visualizeRotors(rotorList);
-
-		System.out.println();
-
+		
 		R3.rotateRotorByOne();
 		visualizeRotors(rotorList);
-
+		
+		// Testing Key production
+		String myKey = "doge";
+		createFullKey(myKey, rotorList);
+		visualizeRotors(rotorList);
+		
 	}
 
 }

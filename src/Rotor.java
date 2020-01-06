@@ -48,26 +48,38 @@ public class Rotor {
 	}
 
 	/**
-	 * Function to Rotate the rotor. The rotor will rotate once the user inputs one
-	 * keystroke
+	 * Rotate the rotor by one function. The rotor will rotate once when the user
+	 * inputs one keystroke
 	 * 
 	 */
 	public void rotateRotorByOne() {
 		// Rotate Left Array
 		char tempLeft = this.alphLeft[0];
 		int i;
-		for(i = 0; i < 25; i++) {
-			this.alphLeft[i] = this.alphLeft[i+1];
+		for (i = 0; i < 25; i++) {
+			this.alphLeft[i] = this.alphLeft[i + 1];
 		}
 		alphLeft[i] = tempLeft;
-		
+
 		// Rotate Right Array
 		char tempRight = this.alphRight[0];
-		for(i = 0 ; i< 25; i++) {
-			this.alphRight[i] = this.alphRight[i+1];
+		for (i = 0; i < 25; i++) {
+			this.alphRight[i] = this.alphRight[i + 1];
 		}
 		alphRight[i] = tempRight;
-		
+
+	}
+
+	/**
+	 * Create Partial Key function: Creates a single character key by rotating the
+	 * rotors
+	 * 
+	 * @param key : character
+	 */
+	public void createPartialKey(char key) {
+		for (char c = 'a'; c < key; c++) {
+			rotateRotorByOne();
+		}
 	}
 
 }
