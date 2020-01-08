@@ -50,10 +50,10 @@ public class Driver {
 		 * when Rotor[0] does a full spin
 		 * 
 		 */
-		for(int i = 0 ; i < str.length(); i++) {
+		for (int i = 0; i < str.length(); i++) {
 			// encrypt/decrypt letter
 		}
-		
+
 		return null;
 	}
 
@@ -62,7 +62,7 @@ public class Driver {
 	 * 
 	 * @param rotorList : the array of Rotors
 	 */
-	public static void visualizeRotors(Rotor[] rotorList) {
+	public static void visualizeRotors(Reflector Refl, Rotor[] rotorList) {
 		// Reflector
 		System.out.print("Refl" + "\t");
 		int rotorIndex = 0;
@@ -74,13 +74,39 @@ public class Driver {
 		System.out.print("\tI/O");
 		System.out.println();
 
+		// AlphAr for In/out
 		char[] alphAr = { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
 				't', 'u', 'v', 'w', 'x', 'y', 'z' };
+
+		// Extract the key set and value set from Reflector map
+		String keySet = Refl.getMap().keySet().toString();
+		String valueSet = Refl.getMap().values().toString();
+
+//		System.out.println(keySet);
+//		System.out.println(valueSet);
+
+		// Clean the strings
+		keySet = keySet.replace(" ", "");
+		keySet = keySet.replace(",", "");
+		keySet = keySet.replace("[", "");
+		keySet = keySet.replace("]", "");
+//		System.out.println(keySet);
+
+		valueSet = valueSet.replace(" ", "");
+		valueSet = valueSet.replace(",", "");
+		valueSet = valueSet.replace("[", "");
+		valueSet = valueSet.replace("]", "");
+//		System.out.println(valueSet);
+
+		// Arrays look like this now: "[a,b,c...]". Must get rid of "[,] " when printing
+		// Create cleaner arrays and fill them with alphabets
+		char[] keySetClean = keySet.toCharArray();
+		char[] valueSetClean = valueSet.toCharArray();
 
 		// Loop over each character (to print each line)
 		for (int i = 0; i < 26; i++) {
 			// Print the Reflector
-			System.out.print("|" + alphAr[i] + "|" + "\t");
+			System.out.print("|" + keySetClean[i] + " - " + valueSetClean[i] + "| ");
 
 			// Print the Rotors
 			for (Rotor r : rotorList) {
@@ -120,6 +146,11 @@ public class Driver {
 		}
 	}
 
+	/**
+	 * Generate Reflector Function that create a random Reflector
+	 * 
+	 * @return a random Reflector
+	 */
 	public static Reflector generateReflector() {
 		HashMap<Character, Character> map = new HashMap<Character, Character>();
 
@@ -144,9 +175,6 @@ public class Driver {
 		char[] leftPart = new char[13];
 		char[] rightPart = new char[13];
 
-		System.out.println(alphRight);
-		System.out.println(alphRight.length);
-
 		for (int i = 0; i < 13; i++) {
 			leftPart[i] = alphRight[i];
 		}
@@ -154,22 +182,16 @@ public class Driver {
 		for (int i = 0; i < 13; i++) {
 			rightPart[i] = alphRight[i + 13];
 		}
-		System.out.println(leftPart);
-		System.out.println(rightPart);
-		
+
 		// fill the map
-		for(int i = 0; i < 13; i++) {
+		for (int i = 0; i < 13; i++) {
 			map.put(leftPart[i], rightPart[i]);
 		}
-		
-		for(int i = 0 ; i < 13; i++) {
+
+		for (int i = 0; i < 13; i++) {
 			map.put(rightPart[i], leftPart[i]);
 		}
-		
-		System.out.println(map.keySet());
-		System.out.println(map.values());
-		
-		
+
 		return new Reflector(map);
 	}
 
@@ -180,9 +202,9 @@ public class Driver {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-//		Rotor R0 = generateRotor('a');
-//		Rotor R1 = generateRotor('e');
-//		Rotor R2 = generateRotor('g');
+		Rotor R0 = generateRotor('a');
+		Rotor R1 = generateRotor('e');
+		Rotor R2 = generateRotor('g');
 //
 //		// Testing Rotation
 //		String str = "bijthaenlyumxpdkzvgsrwfqco";
@@ -199,9 +221,11 @@ public class Driver {
 //		createFullKey(myKey, rotorList);
 //		visualizeRotors(rotorList);
 
-//		HashMap<Character, Character> map = new HashMap<Character, Character>();
-
 		Reflector Refl = generateReflector();
+		System.out.println();
+
+		Rotor[] rotorList = { R0, R1, R2 };
+		visualizeRotors(Refl, rotorList);
 	}
 
 }
