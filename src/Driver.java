@@ -1,5 +1,5 @@
+import java.util.HashMap;
 import java.util.Random;
-
 
 /**
  * 
@@ -43,14 +43,17 @@ public class Driver {
 	 * @param rotorList : array of Rotors
 	 * @return the encrypted string
 	 */
-	public String encrypt(char[] key, Rotor[] rotorList) {
+	public String encrypt(char[] key, Rotor[] rotorList, String str) {
 		/*
 		 * The user inputs the key and the list of rotors. The rotors are in sequence.
 		 * Rotor[0] is the first rotor that will spin on every input Rotor[1] will spin
 		 * when Rotor[0] does a full spin
 		 * 
 		 */
-
+		for(int i = 0 ; i < str.length(); i++) {
+			// encrypt/decrypt letter
+		}
+		
 		return null;
 	}
 
@@ -93,7 +96,7 @@ public class Driver {
 
 			System.out.println();
 		}
-		
+
 		System.out.println();
 	}
 
@@ -103,12 +106,12 @@ public class Driver {
 	 * 
 	 * @param key
 	 * @param rotorList
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static void createFullKey(String key, Rotor[] rotorList) throws Exception {
 		System.out.println("key length " + key.length());
 		System.out.println("Rotor list length " + rotorList.length);
-		if(key.length() != rotorList.length) {
+		if (key.length() != rotorList.length) {
 			throw new Exception("Key must of the same size of the number of rotors");
 		}
 		char[] keyAr = key.toCharArray();
@@ -117,32 +120,88 @@ public class Driver {
 		}
 	}
 
+	public static Reflector generateReflector() {
+		HashMap<Character, Character> map = new HashMap<Character, Character>();
+
+		// create alphabet array
+		char[] alphRight = new char[26];
+
+		// populate the array
+		int index = 0;
+		for (char c = 'a'; c <= 'z'; c++) {
+			alphRight[index++] = c;
+		}
+
+		// shuffle the array
+		Random rand = new Random();
+		for (int i = 0; i < alphRight.length; i++) {
+			int randomIndextoSwap = rand.nextInt(alphRight.length);
+			char temp = alphRight[randomIndextoSwap];
+			alphRight[randomIndextoSwap] = alphRight[i];
+			alphRight[i] = temp;
+		}
+
+		char[] leftPart = new char[13];
+		char[] rightPart = new char[13];
+
+		System.out.println(alphRight);
+		System.out.println(alphRight.length);
+
+		for (int i = 0; i < 13; i++) {
+			leftPart[i] = alphRight[i];
+		}
+
+		for (int i = 0; i < 13; i++) {
+			rightPart[i] = alphRight[i + 13];
+		}
+		System.out.println(leftPart);
+		System.out.println(rightPart);
+		
+		// fill the map
+		for(int i = 0; i < 13; i++) {
+			map.put(leftPart[i], rightPart[i]);
+		}
+		
+		for(int i = 0 ; i < 13; i++) {
+			map.put(rightPart[i], leftPart[i]);
+		}
+		
+		System.out.println(map.keySet());
+		System.out.println(map.values());
+		
+		
+		return new Reflector(map);
+	}
+
 	/**
 	 * Main method
 	 * 
 	 * @param args
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		Rotor R0 = generateRotor('a');
-		Rotor R1 = generateRotor('e');
-		Rotor R2 = generateRotor('g');
+//		Rotor R0 = generateRotor('a');
+//		Rotor R1 = generateRotor('e');
+//		Rotor R2 = generateRotor('g');
+//
+//		// Testing Rotation
+//		String str = "bijthaenlyumxpdkzvgsrwfqco";
+//		char[] charAr = str.toCharArray();
+//		Rotor R3 = new Rotor(charAr, 'h');
+//		Rotor[] rotorList = { R0, R1, R2, R3 };
+//		visualizeRotors(rotorList);
+//		
+//		R3.rotateRotorByOne();
+//		visualizeRotors(rotorList);
+//		
+//		// Testing Key production
+//		String myKey = "doge";
+//		createFullKey(myKey, rotorList);
+//		visualizeRotors(rotorList);
 
-		// Testing Rotation
-		String str = "bijthaenlyumxpdkzvgsrwfqco";
-		char[] charAr = str.toCharArray();
-		Rotor R3 = new Rotor(charAr, 'h');
-		Rotor[] rotorList = { R0, R1, R2, R3 };
-		visualizeRotors(rotorList);
-		
-		R3.rotateRotorByOne();
-		visualizeRotors(rotorList);
-		
-		// Testing Key production
-		String myKey = "doge";
-		createFullKey(myKey, rotorList);
-		visualizeRotors(rotorList);
-		
+//		HashMap<Character, Character> map = new HashMap<Character, Character>();
+
+		Reflector Refl = generateReflector();
 	}
 
 }
