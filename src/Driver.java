@@ -39,22 +39,148 @@ public class Driver {
 	/**
 	 * Encryption/Decryption Function
 	 * 
-	 * @param key       : the key size is the number of rotors
 	 * @param rotorList : array of Rotors
+	 * @param str       : string to encrypt/decrypt
+	 * @param Refl      : reflector
 	 * @return the encrypted string
 	 */
-	public String encrypt(char[] key, Rotor[] rotorList, String str) {
+	public static String encrypt(Rotor[] rotorList, String str, Reflector Refl) {
 		/*
 		 * The user inputs the key and the list of rotors. The rotors are in sequence.
 		 * Rotor[0] is the first rotor that will spin on every input Rotor[1] will spin
 		 * when Rotor[0] does a full spin
 		 * 
 		 */
-		for (int i = 0; i < str.length(); i++) {
-			// encrypt/decrypt letter
+
+		// Create alphabet array I/O
+		char[] alph = new char[26];
+		int alphIndex = 0;
+		for (char c = 'a'; c <= 'z'; c++) {
+			alph[alphIndex] = c;
+			alphIndex++;
 		}
 
-		return null;
+		// Create Result string
+		String result = "";
+
+		// Get Reflector columns as arrays
+		String keySet = Refl.getMap().keySet().toString();
+		String valueSet = Refl.getMap().values().toString();
+		keySet = keySet.replace(" ", "");
+		keySet = keySet.replace(",", "");
+		keySet = keySet.replace("[", "");
+		keySet = keySet.replace("]", "");
+		valueSet = valueSet.replace(" ", "");
+		valueSet = valueSet.replace(",", "");
+		valueSet = valueSet.replace("[", "");
+		valueSet = valueSet.replace("]", "");
+		char[] keySetClean = keySet.toCharArray();
+		char[] valueSetClean = valueSet.toCharArray();
+
+		// encrypt/decrypt letter by letter
+		for (int i = 0; i < str.length(); i++) {
+			// keep track of letter going in, letter going out, IN index and OUT index
+			char inChar;
+			char outChar;
+			int inIndex;
+			int outIndex = 0;
+
+			/*
+			 * Input to Reflector : Get input letter position in the I/O (alphabet array)
+			 * then go towards Reflector
+			 */
+
+			// Loop over the alphabet array
+			for (int j = 0; j < 26; j++) {
+				if (str.charAt(i) == alph[j]) {
+					inChar = alph[j];
+					System.out.println("inputChar = " + inChar);
+					inIndex = j;
+					// Loop from right most rotor to the left most
+					for (int k = rotorList.length - 1; k >= 0; k--) {
+
+						/* HANDLE ROTATIONS BEFORE */
+
+						// get corresponding IN letter
+						inChar = rotorList[k].getAlphRight()[inIndex];
+						System.out.println("inChar in R" + k + "= " + inChar);
+
+						// find the OUT letter which is the alphRight Character (loop to find it)
+						for (int l = 0; l < 26; l++) {
+							if (rotorList[k].getAlphLeft()[l] == inChar) {
+								outChar = inChar;
+								outIndex = l;
+								inIndex = l;
+								System.out.println("outChar in R" + k + "= " + outChar);
+								break; // no need to keep looping after finding OUT letter
+							}
+						}
+					}
+
+					break; // no need to keep looping
+				}
+			}
+
+			/* Reflector */
+			// Get letter from right col (valueSet) of Reflector at outIndex
+			char rightReflChar = valueSetClean[outIndex];
+			System.out.println("right char reflector = " + rightReflChar);
+			char leftReflChar = keySetClean[outIndex];
+			System.out.println("left char reflector = " + leftReflChar);
+
+			/*
+			 * Reflector to Output : Get output letter position in the reflector then go
+			 * towards the output
+			 */
+
+			// look for the same character from the left column in the right column of the
+			// reflector and take its index
+			for (int j = 0; j < 26; j++) {
+				if (leftReflChar == valueSetClean[j]) {
+
+					outChar = leftReflChar;
+					System.out.println("outChar(from reflector) = " + outChar);
+					outIndex = j;
+
+					// Loop from left most rotor to right most
+					for (int k = 0; k < rotorList.length; k++) {
+						// no rotations
+						// Get corresponding IN letter
+						inChar = rotorList[k].getAlphLeft()[outIndex];
+						System.out.println("inChar in R" + k + "= " + inChar);
+
+						// find OUT letter with loop
+						for (int l = 0; l < 26; l++) {
+							if (rotorList[k].getAlphRight()[l] == inChar) {
+								outChar = inChar;
+								outIndex = l;
+//								inIndex = l;
+								System.out.println("outChar in R" + k + "= " + outChar);
+//								System.out.println("outIndex = " + outIndex);
+								break; // no need to keep looping after finding OUT letter
+							}
+						}
+					}
+
+					break; // no need to keep looping
+				}
+			}
+
+			/* Ouput */
+			// Get the corresponding letter in the alphabet array at position outIndex;
+			char encryptedChar = alph[outIndex];
+			System.out.println("encrypted char = " + encryptedChar);
+			System.out.println();
+
+			/*
+			 * 
+			 * ININDEX (USELESS ?)
+			 * 
+			 * 
+			 */
+		}
+
+		return result;
 	}
 
 	/**
@@ -64,7 +190,7 @@ public class Driver {
 	 */
 	public static void visualizeRotors(Reflector Refl, Rotor[] rotorList) {
 		// Reflector
-		System.out.print("Refl" + "\t");
+		System.out.print("Refl" + "\t\t");
 		int rotorIndex = 0;
 		for (int i = 0; i < rotorList.length; i++) {
 			System.out.print(" R" + rotorIndex + "\t");
@@ -81,9 +207,6 @@ public class Driver {
 		// Extract the key set and value set from Reflector map
 		String keySet = Refl.getMap().keySet().toString();
 		String valueSet = Refl.getMap().values().toString();
-
-//		System.out.println(keySet);
-//		System.out.println(valueSet);
 
 		// Clean the strings
 		keySet = keySet.replace(" ", "");
@@ -106,7 +229,7 @@ public class Driver {
 		// Loop over each character (to print each line)
 		for (int i = 0; i < 26; i++) {
 			// Print the Reflector
-			System.out.print("|" + keySetClean[i] + " - " + valueSetClean[i] + "| ");
+			System.out.print("|" + keySetClean[i] + " - " + valueSetClean[i] + "|\t\t");
 
 			// Print the Rotors
 			for (Rotor r : rotorList) {
@@ -204,7 +327,7 @@ public class Driver {
 	public static void main(String[] args) throws Exception {
 		Rotor R0 = generateRotor('a');
 		Rotor R1 = generateRotor('e');
-		Rotor R2 = generateRotor('g');
+//		Rotor R2 = generateRotor('g');
 //
 //		// Testing Rotation
 //		String str = "bijthaenlyumxpdkzvgsrwfqco";
@@ -224,8 +347,10 @@ public class Driver {
 		Reflector Refl = generateReflector();
 		System.out.println();
 
-		Rotor[] rotorList = { R0, R1, R2 };
+		Rotor[] rotorList = { R0, R1 };
 		visualizeRotors(Refl, rotorList);
+
+		encrypt(rotorList, "bob", Refl);
 	}
 
 }
