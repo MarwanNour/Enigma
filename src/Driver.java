@@ -44,7 +44,7 @@ public class Driver {
 	 * @param Refl      : reflector
 	 * @return the encrypted string
 	 */
-	public static String encrypt(Rotor[] rotorList, String str, Reflector Refl) {
+	public static char[] encrypt(Rotor[] rotorList, String str, Reflector Refl) {
 		/*
 		 * The user inputs the key and the list of rotors. The rotors are in sequence.
 		 * Rotor[0] is the first rotor that will spin on every input Rotor[1] will spin
@@ -60,8 +60,8 @@ public class Driver {
 			alphIndex++;
 		}
 
-		// Create Result string
-		String result = "";
+		// Create Result char array of size the length of the given string
+		char[] result = new char[str.length()];
 
 		// Get Reflector columns as arrays
 		String keySet = Refl.getMap().keySet().toString();
@@ -99,7 +99,18 @@ public class Driver {
 					// Loop from right most rotor to the left most
 					for (int k = rotorList.length - 1; k >= 0; k--) {
 
-						/* HANDLE ROTATIONS BEFORE */
+						/* HANDLE ROTATIONS HERE */
+						// Rotate right rotor always
+						if(k == rotorList.length -1 ) {
+							rotorList[rotorList.length - 1].rotateRotorByOne();							
+						}
+						visualizeRotors(Refl, rotorList);
+						
+//						/* FIX HERE */
+						// Rotate next rotor if current rotor reaches notch letter
+						if ((k > 0) && (rotorList[k].getAlphLeft()[0] == rotorList[k].getNotchLetter())) {
+							rotorList[k-1].rotateRotorByOne();
+						}
 
 						// get corresponding IN letter
 						inChar = rotorList[k].getAlphRight()[inIndex];
@@ -171,6 +182,8 @@ public class Driver {
 			char encryptedChar = alph[outIndex];
 			System.out.println("encrypted char = " + encryptedChar);
 			System.out.println();
+			// add encrypted char to result char array
+			result[i] = encryptedChar;
 
 			/*
 			 * 
@@ -178,6 +191,8 @@ public class Driver {
 			 * 
 			 * 
 			 */
+			
+//			visualizeRotors(Refl, rotorList);
 		}
 
 		return result;
@@ -326,8 +341,8 @@ public class Driver {
 	 */
 	public static void main(String[] args) throws Exception {
 		Rotor R0 = generateRotor('a');
-		Rotor R1 = generateRotor('e');
-//		Rotor R2 = generateRotor('g');
+		Rotor R1 = generateRotor('b');
+		Rotor R2 = generateRotor('b');
 //
 //		// Testing Rotation
 //		String str = "bijthaenlyumxpdkzvgsrwfqco";
@@ -347,10 +362,13 @@ public class Driver {
 		Reflector Refl = generateReflector();
 		System.out.println();
 
-		Rotor[] rotorList = { R0, R1 };
+		Rotor[] rotorList = { R0, R1, R2 };
 		visualizeRotors(Refl, rotorList);
 
-		encrypt(rotorList, "bob", Refl);
+		System.out.println(encrypt(rotorList, "hello", Refl));
+
+//		visualizeRotors(Refl, rotorList);
+
 	}
 
 }
